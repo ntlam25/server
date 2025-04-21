@@ -1,42 +1,35 @@
-crabfood-api/src/main/resources/serviceAccountKey.json
-crabfood-api/src/main/resources/application.yml
-# === Java & Maven/Gradle ===
-/target/
-*.class
-*.jar
-*.war
-*.ear
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# === Logs ===
-*.log
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# === IDE Files ===
-# IntelliJ
-.idea/
-*.iml
+### IntelliJ IDEA ###
+.idea
 *.iws
-out/
+*.iml
+*.ipr
 
-# VS Code
-.vscode/
-
-# === Environment files ===
-.env
-*.env
-
-# === Temporary files ===
-*.tmp
-*.bak
-*.swp
-*~
-
-# === Gradle ===
-.gradle/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-**/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# === Maven ===
-.mvn/
-!**/src/main/**/application.properties
-!**/src/main/**/application.yml
+### VS Code ###
+.vscode/
+src/main/resources/serviceAccountKey.json
+src/main/resources/application.yml
