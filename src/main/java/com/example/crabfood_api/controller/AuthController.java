@@ -41,8 +41,13 @@ public class AuthController {
 
     @GetMapping("/verify-email")
     public ResponseEntity<String> verifyEmail(
-            @RequestParam("token") String token
-    ) {
+            @RequestParam("token") String token) {
         return ResponseEntity.ok(service.verifyEmail(token));
+    }
+
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> verifyTokenResetPassword(
+            @RequestParam("token") String token) {
+        return ResponseEntity.ok(service.verifyTokenResetPassword(token));
     }
 }

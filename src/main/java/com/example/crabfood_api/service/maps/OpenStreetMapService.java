@@ -78,14 +78,9 @@ public class OpenStreetMapService {
         
         return AddressResponse.builder()
             .fullAddress(osmAddress.getDisplayName())
-            .city(addr.getOrDefault("city", addr.get("town")))
-            .district(addr.getOrDefault("suburb", addr.get("county")))
-            .ward(addr.getOrDefault("neighbourhood", addr.get("village")))
             .latitude(osmAddress.getCoordinates().getLatitude())
             .longitude(osmAddress.getCoordinates().getLongitude())
             .isDefault(false)
-            .recipientName("")
-            .recipientPhone("")
             .build();
     }
 

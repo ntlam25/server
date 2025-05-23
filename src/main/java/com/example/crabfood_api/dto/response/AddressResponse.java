@@ -13,13 +13,9 @@ import lombok.Setter;
 @Builder
 public class AddressResponse {
     private Long id;
+    private String label;
     private String fullAddress;
-    private String city;
-    private String district;
-    private String ward;
     private Double latitude;
     private Double longitude;
     private Boolean isDefault;
-    private String recipientName;
-    private String recipientPhone;
 }

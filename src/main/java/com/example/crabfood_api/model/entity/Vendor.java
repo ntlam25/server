@@ -4,16 +4,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.locationtech.jts.geom.Point;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,21 +25,20 @@ public class Vendor extends MasterDataBaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
     private User user;
-    
+
     @Column(nullable = false)
-    private String restaurantName;
-    
+    private String name;
+
     private String description;
     private String logoUrl;
     private String coverImageUrl;
-    private String cuisineType;
-    
+
     @Column(nullable = false)
     private String address;
-    
-    @Column(columnDefinition = "POINT SRID 4326") 
+
+    @Column(columnDefinition = "POINT SRID 4326")
     private Point location;
-    
+
     @Builder.Default
     private double serviceRadiusKm = 5.0;
 
@@ -66,10 +58,18 @@ public class Vendor extends MasterDataBaseEntity {
     private double deliveryFee = 0.0;
     @Builder.Default
     private boolean isOpen = true;
+    @Builder.Default
+    private boolean isActive = true;
+
+    private String cuisineType;
 
     @Builder.Default
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Category> categories = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Food> foods = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

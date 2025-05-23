@@ -10,7 +10,7 @@ public class VendorResponse {
 
     private Long userId;
 
-    private String restaurantName;
+    private String name;
 
     private String description;
     private String logoUrl;
@@ -20,6 +20,7 @@ public class VendorResponse {
     private String address;
     private Double latitude;
     private Double longitude;
+    private boolean isActive;
 
     private double distance;
     private Double serviceRadiusKm;

@@ -12,13 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class AddressRequest {
-    private String addressLine;
-    private String city;
-    private String district;
-    private String ward;
+    private String label;
+    private String fullAddress;
     private Double latitude;
     private Double longitude;
     private Boolean isDefault;
-    private String recipientName;
-    private String recipientPhone;
 }

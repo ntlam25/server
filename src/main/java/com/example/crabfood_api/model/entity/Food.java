@@ -1,21 +1,19 @@
 package com.example.crabfood_api.model.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -25,31 +23,50 @@ import lombok.Setter;
 @Entity
 @Table(name = "foods")
 public class Food extends BaseEntity {
-    
-    @ManyToOne
-    @JoinColumn(name = "categoryId", nullable = false)
-    private Category category;
-    
+
+    @ManyToMany
+    @JoinTable(
+            name = "category_food",
+            joinColumns = @JoinColumn(name = "food_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @Builder.Default
+    private Set<Category> categories = new HashSet<>();
+
     @Column(nullable = false)
     private String name;
-    
+
     private String description;
-    
+
     @Column(nullable = false)
     private double price;
-    
+
     private String imageUrl;
     @Builder.Default
     private boolean isAvailable = true;
+
+    @Builder.Default
+    private boolean isFeatured = false;
+
     private int preparationTime;
-    
+
+    @Column(columnDefinition = "DECIMAL(2,1)")
+    @Builder.Default
+    private double rating = 0.0;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id", nullable = false)
+    private Vendor vendor;
+
     @Builder.Default
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodOption> foodOptions = new ArrayList<>();
+    private List<FoodOption> options = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "food", fetch = FetchType.LAZY)
     private List<OrderFood> orderFoods = new ArrayList<>();
 }
-
-

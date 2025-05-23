@@ -39,7 +39,7 @@ public class FoodOption extends BaseEntity{
     @Builder.Default
     private int maxSelection = 1;
     
+    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL)
     private List<OptionChoice> choices = new ArrayList<>();
 }

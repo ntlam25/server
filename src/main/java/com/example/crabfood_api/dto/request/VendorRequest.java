@@ -8,7 +8,7 @@ import lombok.Data;
 public class VendorRequest {
     private Long userId; 
 
-    private String restaurantName;
+    private String name;
 
     private String description;
     private String logoUrl;
@@ -29,5 +29,6 @@ public class VendorRequest {
 
     private Double minOrderAmount;
     private Double deliveryFee;
+    private boolean isActive;
     private boolean isOpen;
 }

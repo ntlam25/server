@@ -126,8 +126,8 @@ public class AuthService implements IAuthService {
                 .email(user.getEmail())
                 .roles(user.getRoles()
                         .stream()
-                        .map(role -> role.getRole().name())
-                        .toArray(String[]::new))
+                        .map(role -> Role.valueOf(role.getRole().name()))
+                        .toList())
                 .build();
     }
 
@@ -149,13 +149,31 @@ public class AuthService implements IAuthService {
 
         return "Email verified successfully";
     }
+    @Override
+    @Transactional
+    public String verifyTokenResetPassword(String verifyToken) {
+        EmailVerificationToken token = tokenRepository.findByToken(verifyToken)
+                .orElseThrow(() -> new AuthException("Invalid token"));
+
+        if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new AuthException("Token expired");
+        }
+
+        User user = token.getUser();
+        user.setEmailVerified(true);
+        userRepository.save(user);
+
+        tokenRepository.delete(token);
+
+        return "Email verified successfully";
+    }
 
     private String generateAndSaveVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
         EmailVerificationToken verificationToken = EmailVerificationToken.builder()
                 .token(token)
                 .user(user)
-                .expiryDate(LocalDateTime.now().plusHours(24))
+                .expiryDate(LocalDateTime.now().plusMinutes(15))
                 .build();
 
         tokenRepository.save(verificationToken);

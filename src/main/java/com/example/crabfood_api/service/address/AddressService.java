@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import com.example.crabfood_api.dto.request.AddressRequest;
 import com.example.crabfood_api.dto.request.GpsCoordinates;
 import com.example.crabfood_api.dto.response.AddressResponse;
-import com.example.crabfood_api.dto.response.OSMResponse;
+import com.example.crabfood_api.dto.response.HereGeocodingResult;
 import com.example.crabfood_api.exception.ResourceNotFoundException;
 import com.example.crabfood_api.model.entity.Address;
 import com.example.crabfood_api.model.entity.User;
 import com.example.crabfood_api.repository.AddressRepository;
 import com.example.crabfood_api.service.AbstractCrudService;
-import com.example.crabfood_api.service.maps.OpenStreetMapService;
+import com.example.crabfood_api.service.maps.HereMapsSyncService;
 import com.example.crabfood_api.util.Mapper;
 import com.example.crabfood_api.util.UserUtil;
 
@@ -23,13 +23,13 @@ public class AddressService
         implements IAddressService {
 
     private final UserUtil userUtil;
-    private final OpenStreetMapService openStreetMapService;
+    private final HereMapsSyncService hereMapsService;
 
     protected AddressService(AddressRepository repository, UserUtil userUtil,
-            OpenStreetMapService openStreetMapService) {
+            HereMapsSyncService hereMapsService) {
         super(repository, Address.class);
         this.userUtil = userUtil;
-        this.openStreetMapService = openStreetMapService;
+        this.hereMapsService = hereMapsService;
     }
 
     public List<AddressResponse> getUserAddresses() {
@@ -40,8 +40,8 @@ public class AddressService
     }
 
     @Override
-    public OSMResponse getAddressFromGps(GpsCoordinates coordinates) {
-        return openStreetMapService.getAddressFromCoordinates(coordinates);
+    public HereGeocodingResult getAddressFromGps(GpsCoordinates coordinates) {
+        return hereMapsService.reverseGeocode(coordinates);
     }
 
     @Override
@@ -54,16 +54,12 @@ public class AddressService
         }
 
         Address address = Address.builder()
-                .addressLine(request.getAddressLine())
-                .city(request.getCity())
-                .district(request.getDistrict())
-                .ward(request.getWard())
+                .fullAddress(request.getFullAddress())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
+                .label(request.getLabel())
                 .isDefault(request.getIsDefault())
                 .user(user)
-                .recipientName(request.getRecipientName())
-                .recipientPhone(request.getRecipientPhone())
                 .build();
 
         return repository.save(address);
@@ -80,15 +76,11 @@ public class AddressService
                     .forEach(addr -> addr.setIsDefault(false));
         }
 
-        address.setAddressLine(request.getAddressLine());
-        address.setCity(request.getCity());
-        address.setDistrict(request.getDistrict());
-        address.setWard(request.getWard());
+        address.setLabel(request.getLabel());
+        address.setFullAddress(request.getFullAddress());
         address.setLatitude(request.getLatitude());
         address.setLongitude(request.getLongitude());
         address.setIsDefault(request.getIsDefault());
-        address.setRecipientName(request.getRecipientName());
-        address.setRecipientPhone(request.getRecipientPhone());
 
         return repository.save(address);
     }

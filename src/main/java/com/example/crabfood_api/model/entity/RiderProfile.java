@@ -4,10 +4,7 @@ import java.time.LocalDateTime;
 
 import com.example.crabfood_api.model.enums.RiderStatus;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +19,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "riderProfiles")
 public class RiderProfile extends MasterDataBaseEntity {
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     private String vehicleType;
     private String vehicleNumber;

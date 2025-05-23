@@ -11,4 +11,5 @@ public interface IAuthService {
     public UserResponse register(SignupRequest request);
 
     public String verifyEmail(String token);
+    public String verifyTokenResetPassword(String token);
 }

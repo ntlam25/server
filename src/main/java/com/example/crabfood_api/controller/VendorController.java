@@ -1,49 +1,109 @@
 package com.example.crabfood_api.controller;
 
+
+import com.example.crabfood_api.dto.request.VendorRequest;
+import com.example.crabfood_api.dto.request.VendorStatusUpdateRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.crabfood_api.dto.request.VendorSearchRequest;
+import com.example.crabfood_api.dto.response.CategoryResponse;
+import com.example.crabfood_api.dto.response.FoodResponse;
+import com.example.crabfood_api.dto.response.MenuResponse;
 import com.example.crabfood_api.dto.response.PageResponse;
 import com.example.crabfood_api.dto.response.VendorResponse;
 import com.example.crabfood_api.service.vendor.IVendorService;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/api/vendors")
-@RequiredArgsConstructor
 public class VendorController {
 
     private final IVendorService service;
 
-    @PostMapping("/vendors-nearby")
-    public ResponseEntity<PageResponse<VendorResponse>> getVendors(
-            @Valid @RequestBody VendorSearchRequest request) {
-
-        PageResponse<VendorResponse> response = service.getNearbyVendors(request);
-        
-        return ResponseEntity.ok(response);
+    public VendorController(com.example.crabfood_api.service.vendor.IVendorService service) {
+        this.service = service;
     }
 
-//    // 2. Tìm kiếm theo tên/địa chỉ
-//    @GetMapping("/search")
-//    public ResponseEntity<List<VendorResponse>> searchRestaurants(
-//        @RequestParam String keyword) {
-//
-//        return ResponseEntity.ok(service.searchByNameOrAddress(keyword));
-//    }
-//
-//    // 3. Lọc nhà hàng (mở cửa, đánh giá...)
-//    @GetMapping("/filter")
-//    public ResponseEntity<List<VendorResponse>> filterRestaurants(
-//        @RequestParam(required = false) Boolean isOpen,
-//        @RequestParam(required = false) Double minRating) {
-//
-//        return ResponseEntity.ok(service.filterVendor(isOpen, minRating));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<VendorResponse> findById(@PathVariable Long id) {
+        VendorResponse response = service.findById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<PageResponse<VendorResponse>> getVendorsByLocation(
+            @RequestParam(required = true) Double latitude,
+            @RequestParam(required = true) Double longitude,
+            @RequestParam(required = false, defaultValue = "5.0") Double radius,
+            @RequestParam(required = false, defaultValue = "20") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset,
+            @RequestParam(required = false) String cuisineType,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Boolean isOpen,
+            @RequestParam(required = false, defaultValue = "distance") String sortBy) {
+
+        VendorSearchRequest request = VendorSearchRequest.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .radius(radius)
+                .limit(limit)
+                .offset(offset)
+                .cuisineType(cuisineType)
+                .minRating(minRating)
+                .isOpen(isOpen)
+                .sortBy(sortBy)
+                .build();
+
+        return new ResponseEntity<>(service.getNearbyVendors(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<PageResponse<VendorResponse>> searchVendorsByNameOrAddress(
+            @RequestParam(required = true) String keyword,
+            @RequestParam(required = false, defaultValue = "20") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset,
+            @RequestParam(required = false) Double latitude,
+            @RequestParam(required = false) Double longitude) {
+        VendorSearchRequest request = VendorSearchRequest.builder()
+                .keyword(keyword)
+                .limit(limit)
+                .offset(offset)
+                .latitude(latitude)
+                .longitude(longitude)
+                .radius(5.0)
+                .build();
+
+        return new ResponseEntity<>(service.searchByNameOrAddress(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/categories")
+    public ResponseEntity<PageResponse<CategoryResponse>> getCategoriesByVendorId(@PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "20") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset) {
+        return new ResponseEntity<>(service.getCategoriesByVendorId(id, limit, offset), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/foods")
+    public ResponseEntity<PageResponse<FoodResponse>> getFoodsByVendorId(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "20") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset) {
+        return new ResponseEntity<>(service.getFoodsByVendorId(id, limit, offset), HttpStatus.OK);
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<VendorResponse> findByUserId(@PathVariable Long userId){
+        return new ResponseEntity<>(service.findByUserId(userId), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<VendorResponse> updateVendorStatus(@PathVariable Long id, @RequestParam boolean status) {
+        return new ResponseEntity<>(service.toggleVendorStatus(id, status), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VendorResponse> update(@PathVariable Long id, @RequestBody VendorRequest request) {
+        return new ResponseEntity<>(service.update(id, request), HttpStatus.OK);
+    }
 }

@@ -13,5 +13,13 @@ public class CategoryRequest {
 
     private Integer displayOrder;
 
+    private String description;
+
+    private String imageUrl;
+
+    private Boolean isGlobal;
+
+    private String slug;
+
     private Boolean isActive;
 }

@@ -1,11 +1,7 @@
 package com.example.crabfood_api.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,19 +14,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "addresses")
+@Table(name = "addresses", indexes = {
+        @Index(name = "idx_user_address", columnList = "user_id"),
+        @Index(name = "idx_default_address", columnList = "user_id, isDefault")
+})
 public class Address extends MasterDataBaseEntity {
     @Column(nullable = false)
-    private String addressLine;
+    private String label;
 
     @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String district;
-
-    @Column(nullable = false)
-    private String ward;
+    private String fullAddress;
 
     private Double latitude;
     private Double longitude;
@@ -42,12 +35,4 @@ public class Address extends MasterDataBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    // Tên người nhận
-    @Column(nullable = false)
-    private String recipientName;
-
-    // SĐT người nhận
-    @Column(nullable = false)
-    private String recipientPhone;
 }

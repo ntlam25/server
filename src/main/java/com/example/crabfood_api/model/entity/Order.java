@@ -1,5 +1,6 @@
 package com.example.crabfood_api.model.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,73 +35,81 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "orders", indexes = {
-    @Index(name = "idx_order_status", columnList = "orderStatus"),
-    @Index(name = "idx_order_created", columnList = "createdAt"),
-    @Index(name = "idx_order_customer", columnList = "customerId")
+        @Index(name = "idx_order_status", columnList = "orderStatus"),
+        @Index(name = "idx_order_created", columnList = "createdAt"),
+        @Index(name = "idx_order_customer", columnList = "customerId")
 })
-public class Order extends MasterDataBaseEntity{
-    
+public class Order extends MasterDataBaseEntity {
+
     @Column(nullable = false, unique = true)
     private String orderNumber;
-    
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customerId", nullable = false)
     private User customer;
-    
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vendorId", nullable = false)
     private Vendor vendor;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "riderId")
     private User rider;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deliveryAddressId")
     private Address deliveryAddress;
-    
+
     private String deliveryAddressText;
     private Double deliveryLatitude;
     private Double deliveryLongitude;
     private String deliveryNotes;
-    
+
     @Column(nullable = false)
     private double subtotal;
-    
+
     @Column(nullable = false)
     private double deliveryFee;
-    
+
     @Builder.Default
     private double discountAmount = 0.0;
-    
+
     @Column(nullable = false)
-    private double totalAmount;
-    
+    private BigDecimal totalAmount;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderPaymentMethod paymentMethod;
-    
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private OrderPaymentStatus paymentStatus = OrderPaymentStatus.PENDING;
-    
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.PENDING;
-    
+
     private String cancellationReason;
-    
+    // Tên người nhận
+    @NotBlank
+    @Column(nullable = false)
+    private String recipientName;
+
+    // SĐT người nhận
+    @NotBlank
+    @Column(nullable = false)
+    private String recipientPhone;
     @ManyToOne
     @JoinColumn(name = "couponId")
     private Coupon coupon;
-    
+
     private LocalDateTime estimatedDeliveryTime;
     private LocalDateTime actualDeliveryTime;
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderFood> orderFoods = new ArrayList<>();
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderStatusHistory> statusHistory = new ArrayList<>();

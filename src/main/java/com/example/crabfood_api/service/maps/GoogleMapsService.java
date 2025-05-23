@@ -1,5 +1,4 @@
 package com.example.crabfood_api.service.maps;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,8 @@ public class GoogleMapsService {
     private final String geocodeUrl;
 
     public GoogleMapsService(RestTemplateBuilder restTemplateBuilder,
-            @Value(value = "${google.maps.api.key}") String apiKey,
-            @Value(value = "${google.maps.geocode.url}") String geocodeUrl) {
+                             @Value(value = "${google.api.key}") String apiKey,
+                             @Value(value = "${google.geocode.url}") String geocodeUrl) {
         this.restTemplate = restTemplateBuilder.build();
         this.apiKey = apiKey;
         this.geocodeUrl = geocodeUrl;
@@ -29,7 +28,7 @@ public class GoogleMapsService {
         String url = String.format(
                 "%s?latlng=%s,%s&key=%s",
                 geocodeUrl, coordinates.getLatitude(), coordinates.getLongitude(), apiKey);
-
+        System.out.println(url);
         GoogleMapsResponse response = restTemplate.getForObject(url, GoogleMapsResponse.class);
 
         if (response == null || !"OK".equals(response.getStatus())) {
@@ -43,17 +42,6 @@ public class GoogleMapsService {
     private AddressResponse extractAddressDetails(GoogleMapsResponse.Result result) {
         AddressResponse.AddressResponseBuilder builder = AddressResponse.builder()
                 .fullAddress(result.getFormattedAddress());
-
-        for (GoogleMapsResponse.AddressComponent component : result.getAddressComponents()) {
-            if (component.getTypes().contains("locality")) {
-                builder.city(component.getLongName());
-            } else if (component.getTypes().contains("administrative_area_level_2")) {
-                builder.district(component.getLongName());
-            } else if (component.getTypes().contains("administrative_area_level_3")
-                    || component.getTypes().contains("sublocality")) {
-                builder.ward(component.getLongName());
-            }
-        }
 
         return builder.build();
     }

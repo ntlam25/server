@@ -1,10 +1,14 @@
 package com.example.crabfood_api.exception;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -69,10 +73,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.FORBIDDEN.value());
+        response.put("error", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+    @ExceptionHandler(ExpiredJwtException .class)
+    public ResponseEntity<Map<String, Object>> handleExpiredJwtException(ExpiredJwtException  ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.UNAUTHORIZED.value());
+        response.put("error", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("error", ex.getMessage());
         return new ResponseEntity<>(errorMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

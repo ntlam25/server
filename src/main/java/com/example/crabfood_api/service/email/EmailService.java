@@ -4,23 +4,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
 public class EmailService implements IEmailService{
 
     private final JavaMailSender mailSender;
     private final String domainUrl;
+    private final TemplateEngine templateEngine;
 
-    public EmailService(JavaMailSender mailSender, 
-        @Value("${application.domain-url}") String domainUrl) {
+    public EmailService(JavaMailSender mailSender,
+                        @Value("${application.domain-url}") String domainUrl, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.domainUrl = domainUrl;
+        this.templateEngine = templateEngine;
     }
 
+    @Async
     @Override
     public void sendVerificationEmail(String toEmail, String verificationToken) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -28,15 +34,10 @@ public class EmailService implements IEmailService{
 
         String verificationUrl = domainUrl + "api/auth/verify-email?token=" + verificationToken;
 
-        String htmlContent = "<html><body>"
-                + "<h1 style='color: #0066cc;'>Xác thực email CrabFood</h1>"
-                + "<p>Vui lòng click vào nút bên dưới để xác thực email:</p>"
-                + "<a href='" + verificationUrl + "' style='"
-                + "background-color: #0066cc; color: white; padding: 10px 20px;"
-                + "text-decoration: none; border-radius: 5px;'>Xác thực Email</a>"
-                + "<p>Hoặc copy link này vào trình duyệt:<br>"
-                + verificationUrl + "</p>"
-                + "</body></html>";
+        Context context = new Context();
+        context.setVariable("verificationUrl",verificationUrl);
+        context.setVariable("email",toEmail);
+        String htmlContent = templateEngine.process("EmailTemplate",context);
 
         helper.setTo(toEmail);
         helper.setSubject("Xác thực email đăng ký CrabFood");

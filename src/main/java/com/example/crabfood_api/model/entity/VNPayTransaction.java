@@ -2,15 +2,11 @@ package com.example.crabfood_api.model.entity;
 
 import java.time.LocalDateTime;
 
+import com.example.crabfood_api.model.enums.PaymentMethod;
 import com.example.crabfood_api.model.enums.PaymentStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,12 +31,19 @@ public class VNPayTransaction extends MasterDataBaseEntity {
     
     private String vnpayTransactionNo;
     private String bankCode;
-    private LocalDateTime payDate;
+    private LocalDateTime paymentDate;
     
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
     
     private String responseCode;
-    private String transactionInfo; 
+    private String transactionInfo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @Column(length = 100)
+    private String transactionId;
 }

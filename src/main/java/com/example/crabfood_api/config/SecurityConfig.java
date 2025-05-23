@@ -16,6 +16,8 @@ import com.example.crabfood_api.service.auth.JwtAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 @Configuration
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
@@ -42,7 +44,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(cors -> cors.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfig.setAllowedOriginPatterns(List.of("http://localhost:4200")); // hoặc List.of("//your-android-app-domain.com")
+                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(List.of("*"));
+                    corsConfig.setAllowCredentials(true);
+                    return corsConfig;
+                }))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");

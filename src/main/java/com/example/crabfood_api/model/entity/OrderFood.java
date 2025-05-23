@@ -46,8 +46,6 @@ public class OrderFood extends BaseEntity{
     @Column(nullable = false)
     private double foodPrice;
     
-    private String specialInstructions;
-    
     @CreationTimestamp
     private LocalDateTime createdAt;
     

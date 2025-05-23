@@ -1,14 +1,14 @@
 package com.example.crabfood_api.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,21 +23,31 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "categories")
-public class Category extends MasterDataBaseEntity{
-    
+public class Category extends MasterDataBaseEntity {
+
     @ManyToOne
-    @JoinColumn(name = "vendorId", nullable = false)
+    @JoinColumn(name = "vendor_id")
     private Vendor vendor;
-    
+
     @Column(nullable = false)
     private String name;
-    
+
+    @Column(name = "is_global", nullable = false)
+    @Builder.Default
+    private boolean isGlobal = false;
+
+
+    private String description;
+    private String imageUrl;
+    @Column(unique = true)
+    private String slug;
+
     @Builder.Default
     private int displayOrder = 0;
     @Builder.Default
-    private boolean isActive = true;    
+    private boolean isActive = true;
 
+    @ManyToMany(mappedBy = "categories")
     @Builder.Default
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Food> foods = new ArrayList<>();
+    private Set<Food> foods = new HashSet<>();
 }

@@ -6,13 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,6 +53,9 @@ public class User extends MasterDataBaseEntity {
 
     private LocalDateTime lastLogin;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private RiderProfile riderProfile;
+
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
@@ -79,5 +76,9 @@ public class User extends MasterDataBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "changedBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderStatusHistory> changedOrderStatuses = new ArrayList<>();
 
 }
