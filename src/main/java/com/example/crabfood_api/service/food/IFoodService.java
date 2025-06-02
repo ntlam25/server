@@ -19,4 +19,6 @@ public interface IFoodService  extends BaseCRUDService<FoodRequest, FoodResponse
     List<FoodResponse> findByVendorIdAndCategoryId(Long vendorId, Long categoryId);
 
     FoodResponse updateStatusAvailable(Long id, boolean available);
+    FoodResponse setFavoriteFood(Long id);
+    List<FoodResponse> findFavoriteFoods();
 }

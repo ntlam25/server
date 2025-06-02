@@ -40,7 +40,7 @@ public class Review extends MasterDataBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "riderId")
-    private User rider;
+    private RiderProfile rider;
 
     private double foodRating;
 
@@ -56,5 +56,4 @@ public class Review extends MasterDataBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodReview> foodReviews = new ArrayList<>();
-
 }

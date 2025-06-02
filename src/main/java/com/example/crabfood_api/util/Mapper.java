@@ -4,16 +4,7 @@ import com.example.crabfood_api.dto.request.FoodOptionRequest;
 import com.example.crabfood_api.dto.request.FoodRequest;
 import com.example.crabfood_api.dto.request.OptionChoiceRequest;
 import com.example.crabfood_api.dto.response.*;
-import com.example.crabfood_api.model.entity.Address;
-import com.example.crabfood_api.model.entity.Category;
-import com.example.crabfood_api.model.entity.Food;
-import com.example.crabfood_api.model.entity.FoodOption;
-import com.example.crabfood_api.model.entity.OptionChoice;
-import com.example.crabfood_api.model.entity.Order;
-import com.example.crabfood_api.model.entity.OrderFood;
-import com.example.crabfood_api.model.entity.OrderFoodChoice;
-import com.example.crabfood_api.model.entity.User;
-import com.example.crabfood_api.model.entity.Vendor;
+import com.example.crabfood_api.model.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,7 +48,6 @@ public class Mapper {
         response.setApproved(domainEntity.isApproved());
         response.setRating(domainEntity.getRating());
         response.setTotalReviews(domainEntity.getTotalReviews());
-        response.setMinOrderAmount(domainEntity.getMinOrderAmount());
         response.setDeliveryFee(domainEntity.getDeliveryFee());
         response.setOpen(domainEntity.isOpen());
         response.setCuisineType(domainEntity.getCuisineType());
@@ -88,6 +78,8 @@ public class Mapper {
                 .displayOrder(domainEntity.getDisplayOrder())
                 .isActive(domainEntity.isActive())
                 .isGlobal(domainEntity.isGlobal())
+                .vendorId(domainEntity.getVendor().getId())
+                .vendorName(domainEntity.getVendor().getName())
                 .foods(domainEntity.getFoods().stream()
                         .map(Mapper::toFoodResponse)
                         .toList())
@@ -112,6 +104,9 @@ public class Mapper {
                 .preparationTime(domainEntity.getPreparationTime())
                 .rating(domainEntity.getRating())
                 .isFeatured(domainEntity.isFeatured())
+                .createdAt(domainEntity.getCreatedAt())
+                .vendorName(domainEntity.getVendor().getName())
+                .updatedAt(domainEntity.getUpdatedAt())
                 .categories(domainEntity.getCategories().stream()
                         .map(Mapper::toSimpleCategoryResponse)
                         .toList())
@@ -196,6 +191,7 @@ public class Mapper {
                 .optionName(choice.getOptionName())
                 .choiceName(choice.getChoiceName())
                 .priceAdjustment(choice.getPriceAdjustment())
+                .optionId(choice.getOptionId())
                 .build();
     }
 
@@ -229,7 +225,7 @@ public class Mapper {
         List<OptionChoice> choices = request.getChoices().stream()
                 .map(choiceRequest -> {
                     OptionChoice choice =  Mapper.toOptionChoiceEntity(choiceRequest);
-                    choice.setOption(option); // Gắn option để liên kết ngược lại
+                    choice.setOption(option);
                     return choice;
                 })
                 .toList();

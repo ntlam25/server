@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -48,6 +49,9 @@ public class Food extends BaseEntity {
     @Builder.Default
     private boolean isFeatured = false;
 
+    @Builder.Default
+    private boolean isFavorite = false;
+
     private int preparationTime;
 
     @Column(columnDefinition = "DECIMAL(2,1)")
@@ -57,6 +61,9 @@ public class Food extends BaseEntity {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id", nullable = false)

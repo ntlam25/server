@@ -10,8 +10,9 @@ import com.example.crabfood_api.service.BaseCRUDService;
 import java.util.List;
 
 public interface ICategoryService extends BaseCRUDService<CategoryRequest, CategoryResponse, Category, Long> {
-    List<CategoryResponse> getAllCategories();
     List<CategoryResponse> getAllGlobalCategories();
     List<FoodResponse> getFoodsByCategoryId(Long categoryId);
     List<CategoryResponse> findByVendorId(Long id);
+
+    CategoryResponse toggleCategoryStatus(Long id);
 }

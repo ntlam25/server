@@ -83,4 +83,5 @@ public class FoodController {
     public ResponseEntity<FoodResponse> updateAvailableStatus(@PathVariable Long id, @RequestParam boolean available) {
         return new ResponseEntity<>(service.updateStatusAvailable(id, available), HttpStatus.OK);
     }
+
 }

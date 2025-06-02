@@ -2,6 +2,7 @@ package com.example.crabfood_api.dto.response;
 
 import java.time.LocalTime;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -33,9 +34,9 @@ public class VendorResponse {
     private Double rating;
     private Integer totalReviews;
 
-    private Double minOrderAmount;
     private Double deliveryFee;
     private boolean isOpen;
+    private boolean isFavorite;
 
     // Nếu cần trả về danh sách liên quan (ví dụ category, coupon, review...), có thể thêm DTO con
     // private List<CategorySimpleDTO> categories;

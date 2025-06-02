@@ -53,13 +53,14 @@ public class Vendor extends MasterDataBaseEntity {
     @Builder.Default
     private int totalReviews = 0;
     @Builder.Default
-    private double minOrderAmount = 0.0;
-    @Builder.Default
     private double deliveryFee = 0.0;
     @Builder.Default
     private boolean isOpen = true;
     @Builder.Default
     private boolean isActive = true;
+
+    @Builder.Default
+    private boolean isFavorite = false;
 
     private String cuisineType;
 
@@ -82,5 +83,4 @@ public class Vendor extends MasterDataBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
-
 }

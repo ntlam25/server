@@ -19,7 +19,5 @@ public class CategoryRequest {
 
     private Boolean isGlobal;
 
-    private String slug;
-
     private Boolean isActive;
 }

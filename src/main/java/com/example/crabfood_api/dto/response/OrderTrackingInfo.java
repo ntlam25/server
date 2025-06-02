@@ -1,28 +1,26 @@
 package com.example.crabfood_api.dto.response;
 
-import com.example.crabfood_api.model.enums.OrderTrackingStatus;
+import com.example.crabfood_api.model.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class OrderTrackingInfo {
     private Long orderId;
-    private Long riderId;
+    private String orderNumber;
+    private OrderStatus status;
+    private Double riderLatitude;
+    private Double riderLongitude;
     private String riderName;
-    private Double riderRating;
-    private String riderImageUrl;
-    private OrderTrackingStatus status;
-    private Double sourceLatitude;
-    private Double sourceLongitude;
-    private Double destinationLatitude;
-    private Double destinationLongitude;
-    private Double currentLatitude;
-    private Double currentLongitude;
-    private String estimatedDeliveryTime;
-    private String restaurantName;
+    private String riderPhone;
+    private LocalDateTime estimatedDeliveryTime;
+    private String currentLocation;
+    private String nextLocation;
 }

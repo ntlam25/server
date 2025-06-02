@@ -14,4 +14,5 @@ public class OrderFoodChoiceResponse {
     private String optionName;
     private String choiceName;
     private double priceAdjustment;
+    private Long optionId;
 }

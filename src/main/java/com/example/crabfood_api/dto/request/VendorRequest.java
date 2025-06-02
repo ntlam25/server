@@ -27,7 +27,6 @@ public class VendorRequest {
 
     private boolean isApproved = false;
 
-    private Double minOrderAmount;
     private Double deliveryFee;
     private boolean isActive;
     private boolean isOpen;

@@ -17,12 +17,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-        @Override
-        public CustomUserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-                User user = userRepository.findByEmailOrUsername(identifier,identifier)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found with identifier: " + identifier));
-                return new CustomUserDetails(user);
-        }
+    @Override
+    public CustomUserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        User user = userRepository.findByEmailOrUsername(identifier, identifier)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with identifier: " + identifier));
+        return new CustomUserDetails(user);
+    }
 
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)
@@ -39,4 +39,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .disabled(!user.isEmailVerified())
                 .build();
     }
+
+
 }

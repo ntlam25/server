@@ -13,6 +13,8 @@ public class CategoryResponse {
     private String description;
     private String imageUrl;
     private String slug;
+    private Long vendorId;
+    private String vendorName;
     private int displayOrder;
     private boolean isActive;
     private boolean isGlobal;

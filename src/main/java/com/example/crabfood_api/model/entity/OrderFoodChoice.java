@@ -23,7 +23,10 @@ public class OrderFoodChoice extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "orderFoodId", nullable = false)
     private OrderFood orderFood;
-    
+
+    @Column(nullable = false)
+    private Long optionId;
+
     @Column(nullable = false)
     private String optionName;
     

@@ -70,10 +70,6 @@ public class User extends MasterDataBaseEntity {
     private List<Order> customerOrders = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "rider", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Order> riderOrders = new ArrayList<>();
-
-    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 

@@ -9,6 +9,8 @@ import com.example.crabfood_api.service.AbstractCrudService;
 import com.example.crabfood_api.util.Mapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService extends AbstractCrudService<UserRequest, UserResponse, UserRepository, User, Long>
         implements IUserService {
@@ -36,5 +38,28 @@ public class UserService extends AbstractCrudService<UserRequest, UserResponse, 
     @Override
     protected UserResponse toResponse(User domainEntity) {
         return Mapper.toUserResponse(domainEntity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        User user = repository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("User not found"));
+        user.setDeleted(true);
+        repository.save(user);
+    }
+
+    @Override
+    public List<UserResponse> findAll() {
+        return repository.findAllByIsDeletedIsFalse().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Override
+    public UserResponse updateStatusUser(Long id, boolean status) {
+        User user = repository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("User not found"));
+        user.setActive(status);
+        return toResponse(repository.save(user));
     }
 }

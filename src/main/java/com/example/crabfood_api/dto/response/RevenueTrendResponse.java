@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
-public class CartSyncResponse {
-    private boolean success;
-    private String message;
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RevenueTrendResponse {
+    private String date;
+    private double revenue;
+    private long orderCount;
 }

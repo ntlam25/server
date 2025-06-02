@@ -54,7 +54,7 @@ public class Order extends MasterDataBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "riderId")
-    private User rider;
+    private RiderProfile rider;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deliveryAddressId")

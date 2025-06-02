@@ -1,19 +1,19 @@
 package com.example.crabfood_api.controller;
 
 
+import com.example.crabfood_api.dto.request.RegisterVendorRequest;
 import com.example.crabfood_api.dto.request.VendorRequest;
 import com.example.crabfood_api.dto.request.VendorStatusUpdateRequest;
+import com.example.crabfood_api.dto.response.*;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.crabfood_api.dto.request.VendorSearchRequest;
-import com.example.crabfood_api.dto.response.CategoryResponse;
-import com.example.crabfood_api.dto.response.FoodResponse;
-import com.example.crabfood_api.dto.response.MenuResponse;
-import com.example.crabfood_api.dto.response.PageResponse;
-import com.example.crabfood_api.dto.response.VendorResponse;
 import com.example.crabfood_api.service.vendor.IVendorService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
@@ -21,7 +21,7 @@ public class VendorController {
 
     private final IVendorService service;
 
-    public VendorController(com.example.crabfood_api.service.vendor.IVendorService service) {
+    public VendorController(IVendorService service) {
         this.service = service;
     }
 
@@ -97,13 +97,37 @@ public class VendorController {
         return new ResponseEntity<>(service.findByUserId(userId), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<VendorResponse> updateVendorStatus(@PathVariable Long id, @RequestParam boolean status) {
-        return new ResponseEntity<>(service.toggleVendorStatus(id, status), HttpStatus.OK);
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<VendorResponse> updateVendorStatus(@PathVariable Long id) {
+        return new ResponseEntity<>(service.toggleVendorStatus(id), HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}/approve")
+    public ResponseEntity<VendorResponse> approveVendor(@PathVariable Long id) {
+        return new ResponseEntity<>(service.approveVendor(id), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<VendorResponse> rejectVendor(@PathVariable Long id) {
+        return new ResponseEntity<>(service.rejectVendor(id), HttpStatus.OK);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<VendorResponse> update(@PathVariable Long id, @RequestBody VendorRequest request) {
         return new ResponseEntity<>(service.update(id, request), HttpStatus.OK);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<VendorRegistrationResponse> registerVendor(
+            @Valid @RequestBody RegisterVendorRequest request) {
+        VendorRegistrationResponse response = service.registerVendor(request);
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<VendorResponse>> getAll() {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+    }
+
 }

@@ -45,10 +45,8 @@ public class FoodService extends AbstractCrudService<FoodRequest, FoodResponse, 
     @Transactional
     @Override
     protected Food createAndSave(FoodRequest request) {
-        User user = userUtil.getCurrentUser();
-        Vendor vendor = vendorRepository.findByUserId(
-                user.getId()).orElseThrow(() ->
-                new ResourceNotFoundException("Vendor with id " + user.getId() + " not found"));
+        Vendor vendor = vendorRepository.findById(request.getVendorId()).orElseThrow(() ->
+                new ResourceNotFoundException("Vendor not found"));
         Food food = Mapper.toFoodEntity(request,vendor);
 
         List<Category> categories = getCategories(request);
@@ -225,6 +223,21 @@ public class FoodService extends AbstractCrudService<FoodRequest, FoodResponse, 
                 () ->  new ResourceNotFoundException("Food with id " + id + " not found"));
         food.setAvailable(available);
         return Mapper.toFoodResponse(repository.save(food));
+    }
+
+    @Override
+    public FoodResponse setFavoriteFood(Long id) {
+        Food food = repository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Food not found"));
+        food.setFavorite(!food.isFavorite());
+        return toResponse(repository.save(food));
+    }
+
+    @Override
+    public List<FoodResponse> findFavoriteFoods() {
+        return repository.findByIsFavoriteIsTrue().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Override

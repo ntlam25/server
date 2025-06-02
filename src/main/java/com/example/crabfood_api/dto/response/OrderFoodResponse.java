@@ -18,5 +18,6 @@ public class OrderFoodResponse {
     private double foodPrice;
     private String foodImageUrl;
     private int quantity;
+    private Long optionId;
     private List<OrderFoodChoiceResponse> choices;
 }

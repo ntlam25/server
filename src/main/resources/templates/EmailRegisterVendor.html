@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Xác nhận đăng ký</title>
+</head>
+<body>
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+  <h2>Chào <span th:text="${fullName}">Tên</span>!</h2>
+  <p>Cảm ơn bạn đã đăng ký cửa hàng <strong th:text="${vendorName}">Tên cửa hàng</strong> trên CrabFood.</p>
+  <p>Thông tin đăng ký của bạn đã được ghi nhận vào lúc <span th:text="${registrationDate}">Ngày giờ</span>.</p>
+  <p>Chúng tôi sẽ xem xét và phê duyệt trong vòng 24-48 giờ.</p>
+  <p>Trân trọng,<br>Đội ngũ CrabFood</p>
+</div>
+</body>
+</html>

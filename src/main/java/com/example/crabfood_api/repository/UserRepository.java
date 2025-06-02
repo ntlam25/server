@@ -1,5 +1,6 @@
 package com.example.crabfood_api.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,4 +31,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     Optional<User> findByEmailOrUsername(String email, String username);
+
+    long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    List<User> findAllByIsDeletedIsFalse();
 }

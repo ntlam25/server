@@ -19,11 +19,16 @@ public class OrderController {
     
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest request) {
-        return new ResponseEntity<>(orderService.createOrder(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(orderService.create(request), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> findAll() {
+        return new ResponseEntity<>(orderService.findAll(), HttpStatus.OK);
     }
     @PostMapping("/online")
     public ResponseEntity<VNPayResponse> createOrderWithPayment(@RequestBody OrderRequest request) {
-        OrderResponse response = orderService.createOrder(request);
+        OrderResponse response = orderService.create(request);
         VNPayResponse vnPayResponse = orderService.createPaymentUrl(response.getId());
         return new ResponseEntity<>(vnPayResponse, HttpStatus.CREATED);
     }
@@ -31,6 +36,11 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable Long orderId, @RequestParam Long customerId) {
         return new ResponseEntity<>(orderService.getOrder(orderId, customerId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{orderId}/detail")
+    public ResponseEntity<OrderResponse> findById(@PathVariable Long orderId) {
+        return new ResponseEntity<>(orderService.findById(orderId), HttpStatus.OK);
     }
 
     @GetMapping("/upcoming")
@@ -47,13 +57,18 @@ public class OrderController {
     public ResponseEntity<List<OrderResponse>> getCustomerOrders(@PathVariable Long customerId) {
         return new ResponseEntity<>(orderService.getCustomerOrders(customerId), HttpStatus.OK);
     }
+
+    @GetMapping("/vendor/{vendorId}")
+    public ResponseEntity<List<OrderResponse>> getVendorOrders(@PathVariable Long vendorId) {
+        return new ResponseEntity<>(orderService.getVendorOrders(vendorId), HttpStatus.OK);
+    }
     
     @PutMapping("/{orderId}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestParam String status,
-            @RequestParam Long customerId) {
-        return new ResponseEntity<>(orderService.updateOrderStatus(orderId, status, customerId), HttpStatus.OK);
+            @RequestParam Long userId) {
+        return new ResponseEntity<>(orderService.updateOrderStatus(orderId, status, userId), HttpStatus.OK);
     }
 
     @PutMapping("/{orderId}/cancel")
